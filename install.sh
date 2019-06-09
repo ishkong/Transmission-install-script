@@ -66,9 +66,9 @@ Download_Transmission(){
 }
 Set_Config(){
 	if [[ -e ${Transmission_conf} ]]; then
-		Now_username = ${grep -Po 'rpc-username[" :]+\K[^"]+' Transmission_conf}
-		Now_password = ${grep -Po 'rpc-password[" :]+\K[^"]+' Transmission_conf}
-		Now_port = ${grep -Po 'rpc-port[" :]+\K[^"]+' Transmission_conf}
+		Now_username = $(grep -Po 'rpc-username[" :]+\K[^"]+' ${Transmission_conf})
+		Now_password = $(grep -Po 'rpc-password[" :]+\K[^"]+' ${Transmission_conf})
+		Now_port = $(grep -Po 'rpc-port[" :]+\K[^"]+' ${Transmission_conf})
 	else 
 		Now_username = 'Shkong'
 		Now_password = 'DefaultPassword'
@@ -243,6 +243,6 @@ echo && echo -e "  Transmission 一键管理脚本 ${Red_font_prefix}[v${sh_ver}
 	Change_Config
 	;;
         *)
-        echo "请输入正确数字 [1-5]"
+        echo "请输入正确数字 [1-4]"
         ;;
     esac
