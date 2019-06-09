@@ -73,6 +73,7 @@ Set_Config(){
 		Now_username = 'Shkong'
 		Now_password = 'DefaultPassword'
 		Now_port = '9417'
+	fi
 	read -e -p "${Info} 请输入新的控制面板用户名(当前:${Now_username})：" rpc-username
 	read -e -p "${Info} 请输入新的控制面板密码(当前:${Now_password})：" rpc-password
 	read -e -p "${Info} 请输入新的控制面板端口(当前:${Now_port})：" Port
@@ -243,6 +244,6 @@ echo && echo -e "  Transmission 一键管理脚本 ${Red_font_prefix}[v${sh_ver}
 	Change_Config
 	;;
         *)
-        echo "请输入正确数字 [1-4]"
+        echo "请输入正确数字 [1-5]"
         ;;
     esac
