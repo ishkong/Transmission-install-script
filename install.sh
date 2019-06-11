@@ -5,14 +5,17 @@ export PATH
 #=================================================
 #   System Required: CentOS7
 #   Description: Transmission for CentOS7 Auto-Install Script
-#   Version: 1.0.5
+#   Version: 1.0.6
 #   Author: Shkong
 #   Blog: https://www.shkong.com/80.html
 #=================================================
 
-sh_ver="1.0.5"
+sh_ver="1.0.6"
 Transmission_file="/usr/share/transmission"
 Transmission_conf="/home/transmission/.config/transmission/settings.json"
+Now_username="Shkong"
+Now_password="DefaultPassword"
+Now_port="9417"
 
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
 Info="${Green_font_prefix}[信息]${Font_color_suffix}"
@@ -57,6 +60,7 @@ check_new_ver(){
 }
 #下载Transmission版本
 Download_Transmission(){
+    check_new_ver
     wget -c --no-check-certificate https://github.com/transmission/transmission-releases/raw/master/transmission-${transmission_new_ver}.tar.xz
     tar -Jxf transmission-${transmission_new_ver}.tar.xz
     cd transmission-${transmission_new_ver}
@@ -69,13 +73,9 @@ Set_Config(){
 		Now_username = $(grep -Po 'rpc-username[" :]+\K[^"]+' ${Transmission_conf})
 		Now_password = $(grep -Po 'rpc-password[" :]+\K[^"]+' ${Transmission_conf})
 		Now_port = $(grep -Po 'rpc-port[" :]+\K[^"]+' ${Transmission_conf})
-	else 
-		Now_username = 'Shkong'
-		Now_password = 'DefaultPassword'
-		Now_port = '9417'
 	fi
-	read -e -p "${Info} 请输入新的控制面板用户名(当前:${Now_username})：" rpc-username
-	read -e -p "${Info} 请输入新的控制面板密码(当前:${Now_password})：" rpc-password
+	read -e -p "${Info} 请输入新的控制面板用户名(当前:${Now_username})：" rpc_username
+	read -e -p "${Info} 请输入新的控制面板密码(当前:${Now_password})：" rpc_password
 	read -e -p "${Info} 请输入新的控制面板端口(当前:${Now_port})：" Port
 }
 Service_Transmission(){
@@ -94,9 +94,9 @@ Service_Transmission(){
     if ! wget -c --no-check-certificate https://raw.githubusercontent.com/ishkong/Transmission-install-script/master/settings.json -O /home/transmission/.config/transmission/settings.json; then
         echo -e "${Error} Transmission服务 配置文件下载失败 !" && rm -rf /home/transmission/.config/transmission/settings.json && exit 1
     fi
-	grep '/home/transmission/.config/transmission/settings.json' | sed -i 's/Shkong/${rpc-username}/g'
-	grep '/home/transmission/.config/transmission/settings.json' | sed -i 's/DefaultPassword/${rpc-password}/g'
-	grep '/home/transmission/.config/transmission/settings.json' | sed -i 's/9417/${Port}/g'
+	sed -i 's/Shkong/${rpc_username}/g' /home/transmission/.config/transmission/settings.json
+	sed -i 's/DefaultPassword/${rpc_password}/g' /home/transmission/.config/transmission/settings.json
+	sed -i 's/9417/${Port}/g' /home/transmission/.config/transmission/settings.json
     chown -R transmission.transmission /home/transmission/
     cd /usr/share/transmission/web/
     wget -c --no-check-certificate https://raw.githubusercontent.com/ishkong/Transmission-install-script/master/src.zip
@@ -149,7 +149,7 @@ Install_Transmission(){
     echo -e "${Info} 开始下载/安装..."
     Download_Transmission
     echo -e "${Info} 开始下载/安装 服务脚本(init)..."
-	Set_Config
+    Set_Config
     Service_Transmission
     echo -e "${Info} 开始设置 iptables防火墙..."
     Set_iptables
@@ -207,11 +207,11 @@ Set_iptables(){
 Change_Config(){
 	Stop_Transmission
 	Set_Config
-	grep '/home/transmission/.config/transmission/settings.json' | sed -i 's/${Now_username}/${rpc-username}/g'
-	grep '/home/transmission/.config/transmission/settings.json' | sed -i 's/${Now_password}/${rpc-password}/g'
-	grep '/home/transmission/.config/transmission/settings.json' | sed -i 's/${Now_port}/${Port}/g'
+	sed -i 's/${Now_username}/${rpc_username}/g' /home/transmission/.config/transmission/settings.json
+	sed -i 's/${Now_password}/${rpc_password}/g' /home/transmission/.config/transmission/settings.json
+	sed -i 's/${Now_port}/${Port}/g' /home/transmission/.config/transmission/settings.json
 	Start_Transmission
-	echo '${Info} 配置更换完成！'
+	echo "${Info} 配置更换完成！"
 }
 
 echo && echo -e "  Transmission 一键管理脚本 ${Red_font_prefix}[v${sh_ver}]${Font_color_suffix}
