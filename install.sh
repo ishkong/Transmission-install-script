@@ -5,12 +5,12 @@ export PATH
 #=================================================
 #   System Required: CentOS7
 #   Description: Transmission for CentOS7 Auto-Install Script
-#   Version: 1.0.4
+#   Version: 1.0.5
 #   Author: Shkong
 #   Blog: https://www.shkong.com/80.html
 #=================================================
 
-sh_ver="1.0.4"
+sh_ver="1.0.5"
 Transmission_file="/usr/share/transmission"
 Transmission_conf="/home/transmission/.config/transmission/settings.json"
 
@@ -160,6 +160,17 @@ Install_Transmission(){
     echo -e "${Info} 所有步骤 安装完毕，开始启动..."
     Start_Transmission
 }
+Remove_Transmission(){
+	[[ ! -e ${Transmission_file} ]] && echo -e "${Error} 检测到 Transmission 已安装 !" && exit 1
+	Stop_Transmission
+	echo -e "${Info} 开始卸载..."
+	rm -rf /etc/init.d/transmissiond
+	rm -rf /home/transmission/.config/transmission/settings.json
+	rm -rf /home/transmission/
+	rm -rf /usr/share/transmission/
+	userdel transmission --force
+	echo -e "${Info} 卸载完毕 !"
+}
 Start_Transmission(){
     check_installed_status
     check_pid
@@ -208,12 +219,13 @@ echo && echo -e "  Transmission 一键管理脚本 ${Red_font_prefix}[v${sh_ver}
 
 ————————————
  ${Green_font_prefix} 1.${Font_color_suffix} 安装 Transmission
+ ${Green_font_prefix} 2.${Font_color_suffix} 卸载 Transmission
 ————————————
- ${Green_font_prefix} 2.${Font_color_suffix} 启动 Transmission
- ${Green_font_prefix} 3.${Font_color_suffix} 停止 Transmission
- ${Green_font_prefix} 4.${Font_color_suffix} 重启 Transmission
+ ${Green_font_prefix} 3.${Font_color_suffix} 启动 Transmission
+ ${Green_font_prefix} 4.${Font_color_suffix} 停止 Transmission
+ ${Green_font_prefix} 5.${Font_color_suffix} 重启 Transmission
 ————————————
- ${Green_font_prefix} 5.${Font_color_suffix} 更改 Transmission 配置
+ ${Green_font_prefix} 6.${Font_color_suffix} 更改 Transmission 配置
 ————————————" && echo
     if [[ -e ${Transmission_file} ]]; then
         check_pid
@@ -226,24 +238,27 @@ echo && echo -e "  Transmission 一键管理脚本 ${Red_font_prefix}[v${sh_ver}
         echo -e " 当前状态: ${Red_font_prefix}未安装${Font_color_suffix}"
     fi
     echo
-    stty erase '^H' && read -p " 请输入数字 [1-4]:" num
+    stty erase '^H' && read -p " 请输入数字 [1-6]:" num
     case "$num" in
         1)
         Install_Transmission
         ;;
-        2)
+	2)
+	Remove_Transmission
+	;;
+        3)
         Start_Transmission
         ;;
-        3)
+        4)
         Stop_Transmission
         ;;
-        4)
+        5)
         Restart_Transmission
         ;;
-	5)
+	6)
 	Change_Config
 	;;
         *)
-        echo "请输入正确数字 [1-5]"
+        echo "请输入正确数字 [1-6]"
         ;;
     esac
