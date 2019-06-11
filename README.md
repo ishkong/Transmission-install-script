@@ -10,5 +10,5 @@
 ## 使用方法
 
 ``` bash
-wget -N --no-check-certificate https://raw.githubusercontent.com/ishkong/Transmission-install-script/install.sh && chmod +x install.sh && bash install.sh
+wget -N --no-check-certificate https://raw.githubusercontent.com/ishkong/Transmission-install-script/master/install.sh && chmod +x install.sh && bash install.sh
 ```
