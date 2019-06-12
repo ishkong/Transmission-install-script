@@ -94,9 +94,9 @@ Service_Transmission(){
     if ! wget -c --no-check-certificate https://raw.githubusercontent.com/ishkong/Transmission-install-script/master/settings.json -O /home/transmission/.config/transmission/settings.json; then
         echo -e "${Error} Transmission服务 配置文件下载失败 !" && rm -rf /home/transmission/.config/transmission/settings.json && exit 1
     fi
-	sed -i 's/Shkong/${rpc_username}/g' /home/transmission/.config/transmission/settings.json
-	sed -i 's/DefaultPassword/${rpc_password}/g' /home/transmission/.config/transmission/settings.json
-	sed -i 's/9417/${Port}/g' /home/transmission/.config/transmission/settings.json
+	sed -i 's/Shkong/'${rpc_username}'/g' /home/transmission/.config/transmission/settings.json
+	sed -i 's/DefaultPassword/'${rpc_password}'/g' /home/transmission/.config/transmission/settings.json
+	sed -i 's/9417/'${Port}'/g' /home/transmission/.config/transmission/settings.json
     chown -R transmission.transmission /home/transmission/
     cd /usr/share/transmission/web/
     wget -c --no-check-certificate https://raw.githubusercontent.com/ishkong/Transmission-install-script/master/src.zip
@@ -207,9 +207,9 @@ Set_iptables(){
 Change_Config(){
 	Stop_Transmission
 	Set_Config
-	sed -i 's/${Now_username}/${rpc_username}/g' /home/transmission/.config/transmission/settings.json
-	sed -i 's/${Now_password}/${rpc_password}/g' /home/transmission/.config/transmission/settings.json
-	sed -i 's/${Now_port}/${Port}/g' /home/transmission/.config/transmission/settings.json
+	sed -i 's/'${Now_username}'/'${rpc_username}'/g' /home/transmission/.config/transmission/settings.json
+	sed -i 's/'${Now_password}'/'${rpc_password}'/g' /home/transmission/.config/transmission/settings.json
+	sed -i 's/'${Now_port}'/'${Port}'/g' /home/transmission/.config/transmission/settings.json
 	Start_Transmission
 	echo "${Info} 配置更换完成！"
 }
