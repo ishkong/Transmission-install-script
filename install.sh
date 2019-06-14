@@ -32,7 +32,7 @@ check_installed_status(){
 }
 #检查Transmission运行状态
 check_pid(){
-    PID=`ps -ef| grep "transmissiond"| grep -v "grep" | grep -v ".sh"| grep -v "init.d" |grep -v "service" |awk '{print $2}'`
+    PID=`ps -ef| grep "transmission-da"| grep -v "grep" | grep -v ".sh"| grep -v "init.d" |grep -v "service" |awk '{print $2}'`
 }
 check_ver_comparison(){
     check_pid
